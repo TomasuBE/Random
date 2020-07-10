@@ -1,5 +1,5 @@
 # Thomas Brijs 2020
-# Websocket client with HTTP Auth
+# Websocket client with HTTP Auth for Face recognition cameras
 #!/usr/bin/python3 -u
 import websocket
 import time
@@ -37,11 +37,13 @@ if __name__ == "__main__":
     auth = f'{user}:{passwd}'
     basicAuth = base64.b64encode(auth.encode()).decode()
     auth_header = f'Authorization: Basic {basicAuth}'
+    ws_proto_header = 'Sec-Websocket-Protocol: tracker-protocol'
+    ws_ext_header = 'Sec-Websocket-Extensions: permessage-deflate; client_max_window_bits'
     ws = websocket.WebSocketApp(f"ws://hostname/ws",
                               on_message = on_message,
                               on_error = on_error,
                               on_close = on_close,
-                              header = [auth_header])
+                              header = [auth_header, ws_ext_header, ws_proto_header])
     ws.on_open = on_open
     ws.run_forever()
 
